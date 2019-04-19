@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://yuxtech.github.io/"/>
-  <updated>2019-04-19T11:02:55.375Z</updated>
+  <updated>2019-04-19T11:36:02.774Z</updated>
   <id>https://yuxtech.github.io/</id>
   
   <author>
@@ -21,9 +21,17 @@
     <link href="https://yuxtech.github.io/2019/04/19/test/"/>
     <id>https://yuxtech.github.io/2019/04/19/test/</id>
     <published>2019-04-19T11:02:55.000Z</published>
-    <updated>2019-04-19T11:02:55.375Z</updated>
+    <updated>2019-04-19T11:36:02.774Z</updated>
+    
+    <content type="html"><![CDATA[<p>新的博客</p>]]></content>
     
     <summary type="html">
+    
+      
+      
+        &lt;p&gt;新的博客&lt;/p&gt;
+
+      
     
     </summary>
     
