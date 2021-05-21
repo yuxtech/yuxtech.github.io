@@ -1,0 +1,860 @@
+
+\documentclass[openany]{ctexbook}
+
+\usepackage[T1]{fontenc}
+\renewcommand\rmdefault{ptm}
+
+
+\usepackage[centering,paperwidth=18.5cm,paperheight=26cm,
+           top=3cm,bottom=3cm,right=2.75cm,left=2.75cm]{geometry}
+
+\setmainfont{Times New Roman}
+\setCJKmainfont[BoldFont={方正黑体_GBK},ItalicFont={方正楷体_GBK}]{方正书宋_GBK}
+
+\defaultfontfeatures{Mapping=tex-text}
+\XeTeXlinebreaklocale ”zh”
+\XeTeXlinebreakskip = 0pt plus 1pt
+
+\usepackage[listings,breakable,skins]{tcolorbox}
+\tcbset{breakable,enhanced}
+\newtcblisting{listing}{
+  sidebyside
+}
+
+\usepackage[hidelinks]{hyperref}
+\ctexset{punct=kaiming}
+\usepackage{hologo,amsmath,amsxtra,amscd}
+\DeclareMathOperator{\xxx}{xxx}
+\usepackage{tabularx}
+\newcolumntype{Y}{>{\centering\arraybackslash}X}
+
+
+\begin{document}
+\tableofcontents
+%\end{shaded}
+\mainmatter
+\chapter{简介}
+
+{\bfseries amsmath}包是一个\LaTeX 软件包，它为改进包含数学公式的文档的信息结构和打印输出提供了各种增强功能。不熟悉\LaTeX 的读者可知参考  \cite{3} 。如果您安装了最新版本的\LaTeX ，{\bfseries amsmath}包是已经提供好了。当新版本的{\bfseries amsmath}包发布的时候，可以通过\href{http://mirror.ctan.org/macros/latex/required/amsmath.zip}{http://mirror.ctan.org/macros/latex/required/amsmath.zip}进行更新。
+
+本文档描述了{\bfseries amsmath}包的特性，并讨论了他们的用途。{\bfseries amsmath} 包还包含了一些辅助的包：
+\begin{center}
+\bfseries amsbsy \quad amsopn\quad amsxtra\quad amscd\quad amstext
+\end{center}
+这些都和数学公式的内容有一定关系。想要获取更多关于数学符号与数学字体的信息，参考\cite{8}和\href{https://www.ams.org/tex/amsfonts.html}{https://www.ams.org/tex/amsfonts.html}。
+
+如果您是一个长期的\LaTeX 用户，并且在您所写的内容中有大量的数学知识，那么您可以在这个{\bfseries amsmath}特性列表中识别一些常见问题的解决方案：
+
+\begin{itemize}
+\item 类似于 \verb|\sin| 和 \verb|\lim| 的一种简单方法来定义一个新的运算符，包括合适的边间距和自动选择正确的字体样式和大小（即使在下标或上标的使用中也一样）。
+\item {\bfseries eqnarray} 环境的多个替代项，使各种类型的公式排列更易于编写。
+\item 公式编号自动向上或向下调整以避免在公式内容上套印（与 {\bfseries eqnarray} 不同）。
+\item 等号周围的间距与等号环境中的正常间距相匹配（与 {\bfseries eqnarray} 不同）。
+\item 生成多行下标的方法，正如常用于求和或求积符号一样。
+\item 用可变的公式编号代替手动编号的一种简单方法。
+\item 一种对选定的公式生成类似于形式 (1.3a) (1.3b) (1.3c) 的子公式编号。
+\end{itemize}
+
+{\bfseries amsmath}主包提供了各种行间公式和其他数学结构。
+
+{\bfseries amstext}提供了在公式中输入文本的\verb|\text|命令。
+
+{\bfseries amsopn}提供了定义类似与\verb|\sin|和\verb|\lim|的新运算符的\verb|\DeclareMathOperator|命令。
+
+{\bfseries amsbsy}为了向后的兼容性，这个包仍然保留着，但是更推荐使用\LaTeX 附带的{\bfseries bm}包。
+
+{\bfseries amscd}提供了画简单交换图的的\verb|CD|环境（不支持对角线的箭头）。
+
+{\bfseries amsxtra}提供了一些零碎的东西，比如\verb|\fracwithdelims|和\verb|\accentedsymbol|，以便与使用版本1.1创作的文档兼容。
+
+{\bfseries amsmath}包包含了{\bfseries amstext，amsopn}和{\bfseries amsbsy}.而{\bfseries amscd}和{\bfseries amsxtra}的特性只有分别加载了这些包才能使用。
+
+
+独立的{\bfseries mathtools}包\cite{10}提供了对{\bfseries amsmath}的一些增强：{\bfseries mathtools}会自动加载{\bfseries amsmath}，因此如果使用{\bfseries mathtools}，则无需再加载{\bfseries amsmash}。一些{\bfseries mathtools}的设置会在以下适当位置标注。
+
+\chapter{{\bfseries amsmath}包的可选项}
+{\bfseries amsmath}包包含如下可选项：
+
+\verb|centertags|（缺省）对于包含\verb|split|环境的公式，将公式编号垂直放置在公式总高度的中间。
+
+\verb|tbtags|顶部或底部标签：对于包含\verb|split|环境的公式，如果编号在右边（或左边），则将公式编号与最后一个（或第一行）放在同一水平。
+
+\verb|sumlimits|（缺省）将行间公式的求和符号的上标和下标分别放在上方和下方。这个选项也影响了其他类型的符号——$\displaystyle{\prod,\coprod,\bigotimes,\bigoplus}$等,但是不包含积分（见下）。
+
+\verb|nosumlimits|总是将求和符号的上标和下标放在求和符号的旁边，包括行间公式。
+
+\verb|intlimits|类似于\verb|sumlimits|，但是针对积分符号的。
+
+\verb|nointlimits|（缺省）是\verb|intlimits|的反义。
+
+\verb|namelimits|（缺省）类似于\verb|sumlimits|，但是对某些运算符例如$\det,\inf,\max,\min$等出现在行间公式中时，通常在下面放置下标。
+
+\verb|nonamelimits|是\verb|namelimits|的反义。
+
+\verb|alignedleftspaceyes|
+
+\verb|alignedleftspaceno|
+
+\verb|alignedleftspaceyesifneg|
+
+要使用这些包选项之一，将选项名称放在\verb|\usepackage|命令的可选参数中——例如\verb|\usepackage[intlimits]{amsmath}|。\hologo{AmS} 文档类和其他预加载想要的选项的文档类都必须通过\verb|\documentclass|来指定——例如
+
+\verb|\documentclass[intlimits,tbtags,reqno]{amsart}|。
+
+{\bfseries amsmash}包还识别通常通过\verb|\documentclass|命令选择（隐式或显式）的以下选项，因此不需要在\verb|\usepackage{amsmath}|的选项列表中重复声明。
+
+\verb|leqno|将公式编号放在左边。
+
+\verb|reqno|将公式编号放在右边。
+
+\verb|fleqn|将公式放在距离左边缘固定缩进的位置而不是放在中间。
+
+有三个选项被添加来控制\verb|aligned|和\verb|gathered|环境左侧的空格。在2017发布之前，这些结构的左侧而不是右侧添加了一个较小的空格。这似乎是操作的一个意外特征，一般是通过在环境前面加前缀\verb|\!|来修正。
+
+新的缺省行为旨在确保在大多数情况下，环境中没有添加很小的空格，并且使用\verb|\!\begin{aligned}|的现有文档继续像以前一样有效。
+
+\verb|alignedleftspaceyes|通常在\verb|aligned|和\verb|gathered|的左侧添加\verb|\,|。
+
+\verb|alignedleftspaceno|通常在\verb|aligned|和\verb|gathered|的左侧不加\verb|\,|。
+
+\verb|alignedleftspaceyesifneg|只在环境前面添加了负距离以后才添加\verb|\,|（新的缺省行为）。
+
+\chapter{行间公式}
+\section{简介}
+{\bfseries amsmath}提供了很多除\LaTeX 自带之外的行间公式结构。增加的集合包括
+\begin{center}
+\begin{tabular}{*{4}{p{5em}}}
+equation&equation*&align&align*\\
+gather&gather*&alignat&alignat*\\
+multline&multline*&flalign&flalign*\\
+split&&&
+\end{tabular}
+\end{center}
+（虽然标准的 \verb|eqnarray| 环境仍然可用，但是最好还是用 \verb|align| 或者 \verb|equation+split|。在 \verb|eqnarray| 环境中，关系符号周围的间距不是首选的数学间距，并且与其他环境中出现的间距不一致。此环境中的长行可能会导致错误放置或套印的公式编号。此环境也不支持使用定理包提供的 \verb|\qed| 或 \verb|\qedhere|。）
+
+除了 \verb|split| 外，每个环境都至少有加星号和不加星号两种形式，其中未加星号的使用 \LaTeX 的公式计数器自动编号，您可以将 \verb|\notag| 放在任一行结束之前的位置来抑制该编号。 \verb|\notag| 不应该出现在行间公式外，因为它会打乱编号。您还可以使用您自己的 \verb|\tag{label}| 来覆盖数字，这里的 \verb|label| 表示任意字段，比如 \verb|$*$| 或者 \verb|ii| 来给公式``编号"。一个 tag 可以通过 \verb|\tag{\ref{<label>}<modifier>}| 来引用一个不同的已经标签过的行间公式，其中 \verb| <modifier>| 为可选项。如果您使用了 {\bfseries hyperref} 包，则使用 \verb|\ref*|；使用带星号的形式 \verb|\ref| 可防止引用包含嵌套链接的已修改标签，使其无法链接到行间公式。
+
+还有一个 \verb|\tag*| 命令，它可以使您提供的文本按字面排版，而不在其周围添加括号。在所有 {\bfseries amsmath} 对齐结构的未编号版本中，也可以使用 \verb|\tag| 和 \verb|\tag*|。在示例文件 {\bfseries testmath.tex} 和 {\bfseries subeqn.tex} 中可以找到使用 \verb|\tag| 标记的一些示例。
+
+\verb|split| 环境是一种特殊的从属形式，只在其中某个环境内部使用。但不能在 \verb|multline| 内使用。\verb|split| 支持仅一个对齐（\&）列；如果需要更多，则应使用 \verb|aligned| 或 \verb|alignedat|。 \verb|split| 结构的宽度是整行宽度。
+
+在进行对齐的结构中（\verb|split，align| 及其变体），关系符号前面有一个\&，但后面没有，不同于 \verb|eqnarray|。将\& 放在关系符号后面会干扰正常间距；它必须放在前面。
+
+在所有的多行环境中，行之间用 \verb|\\| 分割， \verb|\\| 不应用于结束行，否则放在最后一行会导致不想要的额外的垂直间距。
+
+在所有的数学环境中（行内或行间），不允许使用空行（相当于 \verb|\par|），这会导致错误。
+
+不同行间公式的比较（垂直线表示标准边线）
+
+\begin{listing}
+\begin{equation*}
+a=b
+\end{equation*}
+\end{listing}
+
+
+
+
+\begin{listing}
+\begin{equation}
+a=b
+\end{equation}
+\end{listing}
+
+
+
+\begin{listing}
+\begin{equation}\label{xx}
+\begin{split}
+a={}&b+c-d\\
+&+e-f\\
+={}&g+h\\
+={}&i
+\end{split}
+\end{equation}
+\end{listing}
+
+
+
+
+
+\begin{listing}
+\begin{multline}
+a+b+c+d+e+f\\
++i+j+k+l+m+n
+\end{multline}
+\end{listing}
+
+\begin{listing}
+
+\begin{gather}
+a_1=b_1+c_1\\
+a_2=b_2+c_2-d_2+e_2
+\end{gather}
+
+\end{listing}
+
+
+
+\begin{listing}
+
+\begin{align}
+a_1=b_1+c_1\\
+a_2=b_2+c_2-d_2+e_2
+\end{align}
+
+\end{listing}
+
+
+
+\begin{listing}
+
+\begin{align}
+a_{11}&=b_{11}&a_{12}&=b_{12}\\
+a_{21}&=b_{21}&a_{22}&=b_{22}+c_{22}
+\end{align}
+
+\end{listing}
+
+
+
+\begin{listing}
+
+\begin{flalign*}
+a_{11}+b_{11}&=c_{11}
+&a_{12}&=b_{12}\\
+b_{21}&=c_{21}
+&a_{22}&=b_{22}+c_{22}
+\end{flalign*}
+
+\end{listing}
+
+\begin{listing}
+\begin{flalign}
+a_{11}+b_{11}&=c_{11}&a_{12}&=b_{12}\\
+b_{21}&=c_{21}&a_{22}&=b_{22}+c_{22}
+\end{flalign}
+\end{listing}
+
+\verb|multline| 环境是 \verb|equation| 环境的变体，它适用于一行无法放下的公式。\verb|multline| 的第一行在最左边，最后一行在最右边，除了在两边有缩进量 \verb|\multlinegap|，中间的任何其他行都会在行间公式宽度内独立居中（除非 \verb|fleqn| 选项有效）。
+
+类似于 \verb|equation|， \verb|multline| 只有一个公式编号（因此，不应在单个行中标记 \verb|\notag|）。公式编号放在最后一行（\verb|reqno| 选项）或第一行（\verb|legno| 选项）上；\verb|multline| 不支持 \verb|split| 的垂直居中。
+
+可以用 \verb|\shoveleft| 和 \verb|\shoveright| 使得中间行强制居左或居右。这两个命令以整行作为参数，直到最后的 \verb|\\| 但不包含 \verb|\\|。例如
+\begin{tcblisting}{}
+\begin{multline}
+\framebox[.65\columnwidth]{A}\\
+\framebox[.5\columnwidth]{B}\\
+\shoveright{\framebox[.55\columnwidth]{C}}\\
+\framebox[.65\columnwidth]{D}
+\end{multline}
+\end{tcblisting}
+
+\verb|\multlinegap|的值可以通过通常的\LaTeX 命令\verb|\setlength|或\verb|\addtolength|修改。
+
+\section{对齐的换行公式}
+类似于\verb|multline|，\verb|split|环境是针对单个长公式，超出一行而不得不分成多行公式。与\verb|\multline|不同的是，\verb|split|环境提供了行之间的对齐，使用\&标记对齐点。与其他{\bfseries amsmath}的公式结构不同，\verb|split|环境不提供编号，因为它只能在其他行间公式结构中使用，一般是在\verb|equation|，\verb|align|或者\verb|gather|等提供编号的环境。例如
+\begin{tcblisting}{}
+\begin{equation}\label{e:barwq}\begin{split}
+H_c&=\frac{1}{2n} \sum^n_{l=0}(-1)^{l}(n-{l})^{p-2}
+  \sum_{l _1+\dots+l _p=1}\prod^p_{i=1} \binom{n_i}{l _i}\\
+  &\quad\cdot[(n-1 )-(n_i-l _i)]^{n_i-l _i}\cdot
+   \Bigl[(n-l )^2-\sum^p_{j=1}(n_i-l _i)^2\Bigr].
+\end{split}\end{equation}
+\end{tcblisting}
+  
+  
+除了像\verb|\label|这样生成不可见实体的命令，\verb|split| 结构应该构成整个封闭结构的整个主体。
+\section{不带对齐的公式组}
+\verb|gather|环境用于接连的不需要对齐的公式组，每一个公式分别在整行宽度居中。\verb|gather| 中的公式被命令 \verb|\\| 分开，\verb|gather| 中的每一个公式都可以包含一个 \verb|\begin{split}...\end{split}| 结构，例如
+\begin{tcblisting}{listing only}
+\begin{gather}
+first equation\\
+\begin{split}
+second & equation\\
+       & on two lines
+\end{split}\\
+third equation
+\end{gather}
+\end{tcblisting}
+
+\section{带有多列对齐的公式组}
+\verb|align|环境用于两个或更多需要垂直对齐的公式，一般的像等于号之类的二元算符是被对齐的。
+
+要使多个公式列并排，请使用额外的\& 分隔各列。
+\begin{tcblisting}{}
+\begin{align}
+x&=y          & X&=Y         & a&=b+c\label{eq:C}\\
+x'&=y'        & X'&=Y'       & a'&=b\label{eq:D}\\
+x+x'&=y+y'    & X+X'&=Y+Y'   & a'b&=c'b
+\end{align}
+\end{tcblisting}
+
+公式上的逐行注释可以通过在 \verb|align| 环境中机智地应用 \verb|\text| 来完成。
+\begin{tcblisting}{}
+\begin{align}
+x& = y_1-y_2+y_3-y_5+y_8-\dots
+                     && \text{by \eqref{eq:C}}\\
+ & = y'\circ y^*     && \text{by \eqref{eq:D}}\\
+ & = y(0) y'         && \text {by Axiom 1.}
+\end{align}
+\end{tcblisting}
+
+变体环境 \verb|alignat| 允许显式指定等式之间的水平空间。此环境接受一个参数，即“公式列数”（右左对齐列对的数目：参数是对齐的数目）：计算任意行中的最大数目的\&，加1并除以2。
+\begin{tcblisting}{}
+\begin{alignat}{2}
+x& = y_1-y_2+y_3-y_5+y_8-\dots
+                     &\quad& \text{by \eqref{eq:C}}\\
+ & = y'\circ y^*     && \text{by \eqref{eq:D}}\\
+ & = y(0) y'         && \text {by Axiom 1.}
+\end{alignat}
+\end{tcblisting}
+
+\verb|flalign| 环境（“full length alignment”）将公式列之间的空间拉伸到可能的最大宽度，只在公式编号的空白处留下足够的空间。
+\begin{tcblisting}{}
+\begin{flalign}
+x&=y                & X&=Y\\
+x'&=y'              & X'&=Y'\\
+x+x'&=y+y'          & X+X'&=Y+Y'
+\end{flalign}
+\end{tcblisting}
+
+\begin{tcblisting}{}
+  \begin{flalign*}
+x&=y                & X&=Y\\
+x'&=y'              & X'&=Y'\\
+x+x'&=y+y'          & X+X'&=Y+Y'
+\end{flalign*}
+\end{tcblisting}
+
+\section{对齐构建区块}
+类似于 \verb|equation|，多公式环境 \verb|gather，align| 和 \verb|alignat| 旨在构建一个全长的结构。这意味着，例如，我们无法在整个结构旁边添加括号。但是变体环境 \verb|gathered，aligned| 和 \verb|alignedat| 使得内容的长度就是它的实际长度，因此可以用作包含表达式的组件。例如
+\begin{tcblisting}{}
+\begin{equation*}
+\left.\begin{aligned}
+B'&=-\partial\times E,\\
+E'&=\partial\times B-4\pi j,
+\end{aligned}
+\right\}
+\qquad \text{Maxwell 方程组}
+\end{equation*}
+\end{tcblisting}
+
+类似于\verb|array|环境，这些带有\verb|-ed|的变体也接受可选参数\verb|[t]，[b]|或者缺省的\verb|[c]|来指定垂直对齐方式。为协调起见，不要在可选项前添加空格或断行。
+
+像下面的``Cases"结构在数学中时很常见的：
+\begin{equation}
+P_{r-j}=\begin{cases}
+0,&\text{如果}r-j\text{为奇数}\\
+r!(-1)^{(r-j)/2},&\text{如果}r-j\text{为偶数}
+\end{cases}
+\end{equation}
+而在{\bfseries amsmath}包中有一个\verb|cases|环境可以很简单地实现：
+\begin{tcblisting}{listing only}
+P_{r-j}=\begin{cases}
+0,&\text{如果}r-j\text{为奇数}\\
+r!(-1)^{(r-j)/2},&\text{如果}r-j\text{为偶数}
+\end{cases}
+\end{tcblisting}
+
+这里注意 \verb|\text{blabla}| 的使用，以及嵌套的数学公式。 \verb|cases| 的字体设置为 \verb|\textstyle|，如果需要 \verb|\displaystyle| ，一定要直接声明；在 {\bfseries mathtools} 包中提供的 \verb|dcases| 环境可以直接实现。
+
+\verb|-ed| 和 \verb|cases| 环境只能放在一个封闭的数学环境中，可以是行内的 \verb|$...$|，也可以是任意的行间环境。
+
+\section{调整标签的位置}
+在多行公式中，放置公式编号可能是一个相当复杂的问题。{\bfseries amsmath}软件包的环境尽量避免在公式内容上套印公式编号，如有必要，可将该编号向下或向上移动到单独的行。
+
+精确计算一个公式的轮廓的困难有时会导致数字的移动看起来不正确。\verb|\raisetag|命令来调整当前公式编号的垂直位置，如果它已从其正常位置移开，要将特定编号向上移动6pt，使用\verb|\raisetag{6pt}|。（在行间公式结束时，也向上移动此公式后的文本。）这种调整就像换行符和分页符一样是很好的调整，因此在您的文档接近定稿之前，应该先撤消。或者，您最终可能会重复多次微调以跟上文档内容的变化。
+\section{垂直间距与多行公式的换行}
+您可以使用\verb|\\[距离]|命令在所有{\bfseries amsmath}的行间公式环境中获取行与行之间的额外垂直空间，这在\LaTeX 中很常见。不要在\verb|\\|和\verb|[|之间键入空格；仅对于{\bfseries amsmath}定义的行间环境，该空格被解释为表示带括号的内容是文档内容的一部分。
+
+当使用{\bfseries amsmath}包时，公式行之间的分页符通常是不允许的；其原理是，此类内容中的分页符应引起作者的个人注意。要在特定的行间公式中获取单独的分页符，可以使用\verb|\displaybreak|。最好将\verb|\displaybreak|命令放在要生效的位置\verb|\\|之前。像\LaTeX 的\verb|\pagebreak|一样，\verb|\displaybreak|采用0到4之间的可选参数来表示分页的可取性。\verb|\displaybreak[0]|表示“允许在不鼓励中断的情况下中断此处”：不带可选参数的\verb|\displaybreak|与\verb|\displaybreak[4]|一样，表示强制分页。
+
+如果您想随处使用分页符，即使是在多行公式的中间，那么您可以将\\ \verb|\allowdisplaybreaks[1]| 放在文档的导言区。可选参数1-4可用于更精细的控制：[1]表示允许分页符，但尽可能避免此选项。参数2、3、4表示允许性增加。当使用 \verb|\allowdisplaybreaks| 启用行间公式分页时，可以像往常一样，使用 \verb|\\*| 命令禁止给定行后的分页中断。
+
+\textbf{注}：一些公式环境把内容包装在了一个不可断行的盒子中，那么此时 \verb|\displaybreak| 和 \verb|\allowdisplaybreaks| 对它们都不起作用，这些包括 \verb|split，aligned，gathered| 和 \verb|alignedat|。
+\section{中断行间公式}
+\verb|\intertext|命令用于在多行公式中间插入一或两行文字（参见第六章的\verb|\text|命令）。它的显著特点是保持对齐，如果您只是简单地结束行间公式然后再重新使用行间公式，那么这种对齐就不会出现。\verb|\intertext|只能出现在\verb|\\|或\verb|\\*|命令之后。注意下面例子中的``和"的位置。
+
+\begin{tcblisting}{}
+\begin{align}
+A_1&=N_0(\lambda;\Omega')-\phi(\lambda;\Omega),\\
+A_2&=\phi(\lambda;\Omega')-\phi(\lambda;\Omega),\\
+\intertext{和}
+A_3&=\mathcal{N}(\lambda;\omega).
+\end{align}
+\end{tcblisting}
+
+{\bfseries mathtools} 包提供了 \verb|\shortintertext| 命令用于插入少量的文字；它比 \verb|\intertext| 使用更少的垂直距离，当公式编号在右边时尤其有效。
+
+\section{公式编号}
+\subsection{编号秩序}
+在\LaTeX 中，如果您想让公式随着\verb|section|进行编号——即在第一节和第二节中分别让公式编号形式为(1.1)，(1.2)，...，(2.1)，(2.2)，等等。——您可以重新定义\verb|\theequation|即可：
+\begin{verbatim}
+\renewcommand{\theequation}{\thesection.\arabic{equaiton}}
+\end{verbatim}
+这是非常有效的方法，但是公式编号计数器不会随着新的章节的开始而归零，除非您使用\verb|\setcounter|进行重置。此时可以在导言区加入 
+\begin{tcblisting}{listing only}
+\makeatletter
+\@addtoreset{equation}{section}
+\makeatother|
+\end{tcblisting}
+
+但是 {\bfseries amsmath} 包提供了更好的命令\verb|\numberwithin|，使得公式编号与章节编号绑定，且随着新一节的开始，公式编号自动归零，输入
+\begin{verbatim}
+\numberwithin{equation}{section}
+\end{verbatim}
+正如此命令的名字所示，\verb|\numberwithin|可以适用于任何计数器，不仅仅是\verb|equation|计数器。
+\subsection{编号公式的交叉引用}
+\verb|\eqref|使得公式的交叉引用更加简单，它还在公式旁边自动增加了括号。即如果\verb|\ref{abc}|得到3.2，则\verb|\eqref{abc}|会得到(3.2)。由\verb|eqref|引用的公式不论内容如何，它旁边的括号都是直立形状的。
+\subsection{附属编号序列}
+{\bfseries amsmath}还提供了一个包装环境，\verb|subequations|，以便在特定的对齐环境或类似环境中使用从属编号方案对公式进行编号。例如
+\begin{verbatim}
+\begin{subequations}
+...
+\end{subequations}
+\end{verbatim}
+使得在此部分的所有公式编号形式变为(4.9a)(4.9b)(4.9c)...，如果它的上一个公式编号为(4.8)。在\verb|\begin{subequations}|后紧跟的\verb|\label|命令会生成一个带括号的4.9的引用标签，而不是(4.9a)。\verb|subequations|使用的计数器组是\verb|parentequation| 和 \verb|equation|，而\verb|\addtocounter，\setcounter，\value|等，可以像往常一样应用于这些计数器。要获得任何除小写字母之外的从属编号，使用标准的\LaTeX 改变编号形式\cite{3}，\S6.3，\S C.8.4。例如像下面一样重定义\verb|\theequation|来得到罗马数字。
+\begin{verbatim}
+\begin{subequations}
+\renewcommand{\theequation}{\theparentequation \roman{equation}}
+...
+\end{subequations}
+\end{verbatim}
+
+\subsection{编号风格}
+默认的公式编号设置为\verb|\normalfont|，这意味着在粗体部分标题中，粗体是被抑制的。解决方法是使用\verb|(\ref{...})|而不用\verb|\eqref{...}|。
+
+如果行间公式编号被指定了较小的类型，则公式编号的大小也会变小。默认的大小可以通过在导言区加入以下补丁得到确保：
+\begin{verbatim}
+\makeatletter
+\renewcommand{\maketag@@@}[1]{\hbox{\m@th\normalsize\normalfont#1}}%
+\makeatother
+\end{verbatim}
+（这个修正或许会放在{\bfseries amsmath}以后的版本中。）
+
+\chapter{各种各样的数学特性}
+\section{矩阵}
+除了\LaTeX 的标准的\verb|array|环境外，{\bfseries amsmath}提供了一些其他的矩阵环境。\verb|pmatrix，bmatrix,Bmatrix,vmatrix|和\verb|Vmatrix|分别带有定界符$(),[],\{\},||$和$\|\|$。为了命名的连贯性，还有一个\verb|matrix|环境不带定界符。这在\verb|array|环境中并不是完全多余的；\verb|matrix|环境比\verb|array|还使用了更加节俭的水平空格；而且与\verb|array|环境不同的是，您不需要给出矩阵环境的列规范。默认情形下，至多可以有10个居中的列\footnote{确切地说，矩阵的最大列数由计数器{\bfseries MaxMatrixCols}(默认值=10)控制，如果有必要的话，可以用\LaTeX 的{$\backslash$
+setcounter}或{$\backslash$ addtocounter}进行更改。}。（如果您的列有左对齐或右对齐或者其他格式需求，您可以使用\verb|array|，或者{\bfseries mathtools}包提供了这些环境的*变体环境，带有可选参数来指定左对齐或右对齐。）
+
+要生产一个适合文本的小矩阵，我们有\verb|smallmatrix|环境（例如$\bigl(\begin{smallmatrix}
+a&b\\ c&d
+\end{smallmatrix}\bigr)$）比普通矩阵更适合于单行文本。这里的定界符一定要指明。（{\bfseries mathtools}包提供了\verb|smallmatrix|的p,b,B,v,V版本，以及上面讨论过的*变体）上述例子生成是通过
+\begin{verbatim}
+$\bigl(\begin{smallmatrix}
+a&b\\ c&d
+\end{smallmatrix}\bigr)$
+\end{verbatim}
+
+\verb|\hdotsfor{<number>}|在矩阵的给定列数中生成一行点，例如
+\begin{listing}
+  $\begin{matrix}
+a&b&c&d\\
+e&\hdotsfor{3}
+ \end{matrix}$
+\end{listing}
+
+点之间的距离可以通过方括号选项修改，例如，\verb|\hdotsfor[1.5]{3}|。方括号里面的数字会被作为一个倍数（例如默认的倍数是1.0）
+\begin{tcblisting}{}
+\begin{equation}
+\begin{pmatrix}
+D_1t&-a_{12}t_2&\dots&-a_{n}t_n\\
+-a_{21}t_1&D_2t&\dots&-a_{2n}t_n\\
+\hdotsfor[2]{4}\\
+-a_{n1}t_1&-a_{n2}t_2&\dots&D_nt
+\end{pmatrix}
+\end{equation}
+\end{tcblisting}
+
+\section{数学空格命令}
+{\bfseries amsmath}包稍微扩展了一组数学间距命令，如下所示。这些命令的全称和缩写形式都是健壮的，它们也可以在数学之外使用。
+\begin{center}
+\begin{tabular}{p{0.08\textwidth}p{0.2\textwidth}p{0.14\textwidth}|p{0.08\textwidth}
+p{0.2\textwidth}p{0.14\textwidth}}
+缩写                &全称                 &例子             &缩写              &全称               &例子\\
+\hline
+          &无空格              &$\Rightarrow\Leftarrow$ &  &无空格&$\Rightarrow\Leftarrow$ \\
+\verb|\,| &\verb|\thinspace|&$\Rightarrow\,\Leftarrow$ &\verb|\!|&\verb|\negthinspace|&$\Rightarrow\!\Leftarrow$\\
+\verb|\:|&\verb|\medspace|&$\Rightarrow\:\Leftarrow$&  &\verb|\negmedspace|&$\Rightarrow\negmedspace\Leftarrow$\\
+\verb|\;|&\verb|\thickspace|&$\Rightarrow\;\Leftarrow$&  &\verb|\negthickspace|&$\Rightarrow\negthickspace\Leftarrow$\\
+&\quad&$\Rightarrow\quad\Leftarrow$&&&\\
+&\qquad&$\Rightarrow\qquad\Leftarrow$&&&
+\end{tabular}
+\end{center}
+
+为了最大限度地控制数学间距，请使用\verb|\mspace|和数学单位。一个数学单位，或者说是\verb|mu|，等于1/18 em。因此，要得到一个负的\verb|\quad|，您可以输入\verb|\mspace{-18.0mu}|。
+\section{Dots}
+对于各种上下文中省略号点（抬升的或者与基线持平的）的首选位置，没有普遍的共识，因此这可以看做是个人的喜好问题。使用下面的语义导向的命令
+\begin{itemize}
+  \item \verb|\dotsc| 意味着``dots with commas"，逗号分隔
+  \item \verb|\dotsb| 意味着``dots with binary operators/relations"，二元算符与关系
+  \item \verb|\dotsm| 意味着``multiplication dots"，连乘
+  \item \verb|\dotsi| 意味着``dots with integrals"，多重积分
+  \item \verb|\dotso| 意味着``other dots"（除上面之外的）
+\end{itemize}
+
+而不用\verb|\ldots|或\verb|\cdots|，您可以让您的文档随时随地适应不同的惯例，例如，万一您必须把它交给一个在这方面坚持遵循家庭传统的出版商，各种类型的默认处理遵循美国数学社会惯例：
+
+\begin{tcblisting}{}
+Then we have the series $A_1,A_2,\dotsc$,
+the regional sum $A_1+A_2+\dotsb$, the
+orthogonal product $A_1 A_2\dotsm$, and
+the infinite integral
+\[\int_{A_1}\int_{A_2}\dotsi\].
+\end{tcblisting}
+
+在大多数情况下。可以使用未区分的\verb|\dots|，{\bfseries amsmath}将根据即时上下文输出最合适的形式：如果不适当的形式出现了，则可以在检查输出后更正。
+\section{不间断的破折号}
+\verb|\nobreakdash|命令用来抑制在连字符或破折号后换行的可能性。例如您把\verb|page1-9|写为\verb|page 1\nobreakdash--9|，那么在破折号与\verb|9|之间绝不会出现换行。您还可以使用\verb|\nobreakdash|来防止不想要的连字符，比如\verb|$p$-adic|。如果频繁使用的话，您可以使用缩写：
+\begin{verbatim}
+\newcommand{\p}{$p$\nobreakdash}% for ``\p-adic"
+\newcommand{\Ndash}{\nobreakdash--}% for ``pages 1\Ndash 9"
+%   for ``\n dimensional"(``n-dimensional"):
+\newcommand{\n}[1]{$n$\nobreakdash-\hspace{0pt}}
+\end{verbatim}
+
+最后一个例子展示了如何在下面的单词中禁止连字符后换行。（在连字符后添加零宽度的空格即可）。
+
+\section{数学中的音符}
+在一般的\LaTeX 中，在数学中添加二重音符是很差的效果，但是在{\bfseries amsmath}包里，您可以改良二重音符: $\hat{\hat{A}}$（\verb|\hat{\hat{A}}|）。
+
+除了\LaTeX 里面已有的\verb|\dot|和\verb|\ddot|命令之外，{\bfseries amsmath}还提供了\verb|\dddot|和\verb|\ddddot|命令来生成三重和四重点音符。
+
+要想得到上标的\verb|hat|或者\verb|tilde|符号，加载{\bfseries amsxtra}包，使用\verb|\sphat|或者\verb|\sptilde|。使用方法为\verb|A\sphat|（$A\sphat$）。
+
+要在数学音符的位置放置任意一个符号，或者要得到下音符，可以参考Javier Bezos制作的{\bfseries accents}包。（{\bfseries amsmath}包一定要在{\bfseries accents}包之前加载。）
+\section{根号}
+在一般的\LaTeX 中，根号指标的放置有时候并不好：$\sqrt[\beta]{k}$（\verb|\sqrt[\beta]{k}|）。在{\bfseries amsmath}包中，\verb|\leftroot|和\verb|\uproot|可以让您调整根号的位置：
+\begin{verbatim}
+    \sqrt[\leftroot{-2}\uproot{2}\beta]{k}
+\end{verbatim}
+将$\beta$向上和向右平移：$\sqrt[\leftroot{-2}\uproot{2}\beta]{k}$。在\verb|\leftroot|中的负的参数使得$\beta$向右移。这里的距离单位是非常小的数，适用于这里的调整。
+
+\section{带盒子的公式}
+\verb|\boxed|命令给它的参数放置一个盒子，类似于\verb|\fbox|，但不同的是这里的内容必需是在数学模式中：
+\begin{tcblisting}{}
+\begin{equation}
+\boxed{\eta\le C(\delta(\eta))+\Lambda_M(0,\delta)}
+\end{equation}
+\end{tcblisting}
+
+\section{上下箭头}
+基本的\LaTeX 提供了\verb|\overrightarrow|和\verb|\overleftarrow|命令。而{\bfseries amsmath}提供了一些其他的扩展的上下箭头：
+\begin{verbatim}
+\overleftarrow \underleftarrow  \overrightarrow
+\underrightarrow \overleftrightarrow \underleftrightarrow
+\end{verbatim}
+\section{扩展的箭头}
+\verb|\xleftarrow|和\verb|\xrightarrow|产生的箭头可以自适应于它的上标或下标。这两个命令带一个可选参数（上标）和一个必选参数（下标，可以为空）：
+\begin{tcblisting}{}
+\begin{equation}
+A\xleftarrow{n+\mu-1}B\xrightarrow[T]{n\pm i-1}C
+\end{equation}
+\end{tcblisting}
+
+\section{将一个符号附加给另一个符号}
+\LaTeX 提供了\verb|\stackrel|命令可以在一个二元算符上放置一个上标，而在{\bfseries amsmath}中有更多的命令，\verb|\overset，\underset|，可以把一个符号放在另一个符号，关系或者其他东西的上方或下方。输入\verb|\overset{*}{X}|会在$X$上方放置一个上标*，即$\overset{*}{X}$；\verb|\underset|是类似地放置一个下标。
+
+也参见\S7.2中关于\verb|\sideset|的描述。
+\section{分式及相关结构}
+\subsection{\textbackslash frac，\textbackslash dfrac和\textbackslash tfrac命令}
+\verb|\frac|命令是\LaTeX 的一个基本命令，带有两个参数——分子和分母——然后用普通的分式打出来。{\bfseries amsmath}还提供了\verb|\dfrac|和\verb|\tfrac|命令分别作为\verb|\displaystyle\frac...|和\verb|\textstyle\frac...|的缩写
+\begin{tcblisting}{}
+\begin{equation}
+\frac{1}{k}\log_2 c(f)\;\tfrac{1}{k}\log_2 c(f)\;
+\sqrt{\frac{1}{k}\log_2 c(f)}\;\sqrt{\dfrac{1}{k}\log_2 c(f)}
+\end{equation}
+\end{tcblisting}
+
+\subsection{\textbackslash binom，\textbackslash dbinom和\textbackslash tbinom命令}
+对于类似于$\binom nk$的二项式表达式，{\bfseries amsmath}提供了\verb|\binom，\dbinom|和\verb|\tbinom|命令:
+\begin{tcblisting}{}
+\begin{equation}
+2^k-\binom{k}{1}2^{k-1}+\binom{k}{2}2^{k-2}
+\end{equation}
+\end{tcblisting}
+
+\subsection{\textbackslash genfrac命令}
+\verb|\frac，\binom|以及他们的变体的功能都是由\verb|\genfrac|命令来生成的，\verb|\genfrac|带有六个参数，最后两个参数对应于\verb|\frac|的分子与分母，前两个参数是可选的定界符（比如在\verb|\binom|中看到的）第三个参数是一条有厚度的线（\verb|\binom|把线的厚度设置为0，也就是不可见）；第四个参数是数学格式：整数值0-3分布对应于\verb|\displaystyle，\textstyle，\scriptstyle|和\verb|\scriptscriptstyle|，如果第三个参数置空，则线条的厚度默认为``正常"。
+\begin{verbatim}
+\genfrac{左定界符}{右定界符}{厚度}{数学格式}{分子}{分母}
+\end{verbatim}
+这里说明一下\verb|\frac，\tfrac|和\verb|\binom|是如何定义的：
+\begin{verbatim}
+\newcommand{\frac}[2]{\genfrac{}{}{}{}{#1}{#2}}
+\newcommand{\tfrac}[2]{\genfrac{}{}{}{1}{#1}{#2}}
+\newcommand{\binom}[2]{\genfrac{(}{)}{0pt}{}{#1}{#2}}
+\end{verbatim}
+如果您发现自己要在一篇文档中重复地用\verb|\genfrac|定义一个特殊的记号，为了您自己以及出版社的方便，您可以用类似于\verb|\frac，\binom|的形式定义一个名字有意义的简写记号。
+
+最原始的生成分数的命令\verb|\over，\overwithdelims，\atop，\atopwithdelims，\above|，
+\verb|\abovewithdelims|和{\bfseries amsmath}一起使用的时候会发出警告信息，这个原因在\verb|technote.tex|中讨论了。
+\section{连分数}
+\begin{listing}
+\begin{equation}
+\cfrac{1}{\sqrt{2}+
+ \cfrac{1}{\sqrt{2}+
+  \cfrac{1}{\sqrt{2}+\dotsb
+ }}}
+\end{equation}
+\end{listing}
+
+这样比直接用\verb|\frac|产生的结果更好看。要把其中任何一个分式的分子放在左边或右边是靠\verb|\cfrac[l]|或\verb|\cfrac[r]|来实现的，而不是\verb|\cfrac|。
+\section{Smash选项}
+\verb|\smash|命令用来输出一个高度和深度为0的子公式，有时候在调整子公式与旁边符号的位置是很有用的。在{\bfseries amsmath}中，\verb|\smash|命令带有一个可选参数\verb|[t]|或\verb|[b]|，因为有时候在保留自然深度和高度时，\verb|smash|只用于top或buttom会更好。例如，当旁边的根号因为内容的高度和深度的差异在位置或大小不均匀时，\verb|\smash|命令可以使其更加一致。试比较$\sqrt x+\sqrt y+\sqrt z$和$\sqrt {x}+\sqrt{\smash[b]{y}}+\sqrt{z}$的区别，其中后者是由\verb|\sqrt {x}+\sqrt{\smash[b]{y}}+\sqrt{z}|生成的。
+\section{定界符}
+\subsection{定界符的大小}
+由\verb|\left|和\verb|\right|自适应的定界符大小有两点限制：首先它是机械式地产生足够大的定界符能够包围定界符中间的最大内容，其二就是大小的范围甚至不是近似连续的，但有相当大的量级跳跃。这意味着，对于给定的分隔符大小而言，太大的数学片段无穷大，将得到更大的下一个大小，在正常大小的文本中，将跳转3pt左右。有两种或三种情况通常会调整定界符大小。使用一组名字中包含`big'的命令。
+
+\begin{tabular}{l|llllll}
+定界符 &文本&\verb|\left|&\verb|\bigl|&\verb|\Bigl|&\verb|\biggl|&\verb|\Biggl|\\
+大小&大小     &\verb|\right|&\verb|\bigr|&\verb|\Bigr|&\verb|\biggr|&\verb|\Biggr|\\
+\hline
+结果&$(b)(\frac cd)$&$\left(b\right)\left(\frac cd\right)$&$\bigl(b\bigr)\bigl(\frac cd\bigr)$&$\Bigl(b\Bigr)\Bigl(\frac cd\Bigr)$&$\biggl(b\biggr)\biggl(\frac cd\biggr)$
+&$\Biggl(b\Biggr)\Biggl(\frac cd\Biggr)$
+\end{tabular}
+
+第一种情形是求和算符中带有上下标的，用\verb|\left|和\verb|\right|产生的定界符一般比需要的大，因此用\verb|Big|或\verb|bigg|类的大小能得到更好的结果：
+\begin{tcblisting}{}
+\[\left[\sum_i a_i\left\lvert\sum_j x_{ij}\right\rvert^p\right]^{1/p}\qquad\biggl[\sum_i a_i\Bigl\lvert\sum_j x_{ij}\Bigr\rvert^p\biggr]^{1/p}\]
+\end{tcblisting}
+
+第二种情形是有多个定界符的时候，\verb|\left|和\verb|\right|会使得所有定界符大小相同（因为这已经足以覆盖其中最大的内容了），但事实上您可能希望使得外面的定界符稍微大于内嵌的定界符：
+\begin{verbatim}
+\left(a_1 b_1)-(a_2 b_2)\right)
+\left(a_2 b_1)+(a_1 b_2)\right)
+\quad\text{versus}\quad
+\bigl(a_1 b_1)-(a_2 b_2)\bigr)
+\bigl(a_2 b_1)+(a_1 b_2)\bigr)
+\end{verbatim}
+
+第三种情况是在运行文本时有一种稍微过大的对象，例如$\left|\frac{b'}{d'}\right|$，这里由\verb|\left|和\verb|\right|产生的定界符会导致过多的行伸展。在这种情况下，可以使用\verb|\bigl|和\verb|\bigr|生成比基本大小稍大但仍能适应正常行距的定界符：$\bigl|\frac{b'}{d'}\bigr| $
+
+在一般的\LaTeX 中，\verb|\big，\bigg，\Big|和\verb|\Bigg|定界符无法适当地伸展，但是加载了\verb|amsmath|包以后就可以做到了。
+\subsection{竖线符号}
+{\bfseries amsmath}包提供了\verb|\lvert，\rvert，\lVert，\rVert|命令（相比于\verb|\langle，\rangle|）以解决垂直字符\verb|||的过载问题。这个符号在数学中表示非常广泛的数学关系：比如数论中的整除关系：$p|q$，或者绝对值符号$|z|$，或者集合符号中的``使得"，或者``取值于"$f_\zeta(t)\big|_{t=0}$。
+
+使用的多样性本身并不是那么糟糕：然而，糟糕的是，并非所有的使用都采用相同的排版方式，而且知识渊博的读者的完全辨别能力在数学文档的计算机处理中是无法复制的。因此，建议在任何给定的文档中，\verb|vert|或者\verb|||与一个选定的数学记号之间应该一一对应，这对双竖线命令\verb|\||也是一样的。这将立即排除使用定界符\verb|||和\verb|\||的可能性。因为\verb|\left|和\verb|\right|定界符在相邻符号中不相关，因此，在文档前言中定义适当的命令，以便任意成对的竖条定界符的使用。
+\begin{verbatim}
+\providecommand{\abs}[1]{\lvert#1\rvert}
+\providecommand{\norm}[1]{\lVert#1\rVert}
+\end{verbatim}
+于是此文档就可以用\verb|\abs{z}|生成$|z|$，用\verb|\norm{v}|生成$\|v\|$。{\bfseries mathtools}包提供了\verb|\DeclarePairedDelimiter|命令用来定义类似于\verb|\abs|的命令，但是定界符大小是可变的。
+
+\chapter{算符名称}
+\section{定义新算符名称}
+数学函数，例如$\log$，$\sin$和$\lim$用罗马形式输出使得它们与一般的单个字母的斜体数学变量相区别。比较常用的函数都有预定义的名称，\verb|\log，\sin，\lim|等，但是在数学文档中经常会出现一些新的命令，所以{amsmath}包提供了一个定义新算符名称的命令。要定义一个类似于\verb|\sin|的命令\verb|\xxx|，您可以在导言区输入
+\begin{verbatim}
+\DeclareMathOperator{\xxx}{xxx}
+\end{verbatim}
+
+于是在输入\verb|\xxx|时就会以适当的字体输出xxx，并且如果有必要的话会在两边自动加上适当的间距，所以您得到的是$A\xxx B$而不是$A\text{xxx}B$。在\verb|\DeclareMathOperator|的第二个参数（名称部分）中，第二个连字符是文本连字符而不是负号，星号*将会以抬升的文本输出而不是以一个居中的数学星号(比较$a\text{-}b\text{*}c$和$a-b*c$)，否则名称文本将以数学模式打印，以便您可以使用，例如那里的上标和下标。
+
+如果新的算符需要带有`limits'上标或下标，例如$\lim,\sup,\max$，使用带*形式的\verb|\DeclareMathOperator|命令：
+\begin{verbatim}
+\DeclareMathOperator*{\Lim}{Lim}
+\end{verbatim}
+也可以参看\S \ref{sec7.3} 的关于上下标的设置。
+
+下面的算符名称是预定义的：
+
+\begin{tabular}{rlrlrlrl}
+\verb|\arccos|&$\arccos$&\verb|\deg|&$\deg$&\verb|\lg|&$\lg$&\verb|\projlim|&$\projlim$\\
+\verb|\arcsin|&$\arcsin$&\verb|\det|&$\det$&\verb|\lim|&$\lim$&\verb|\sec|&$\sec$\\
+\verb|\arctan|&$\arctan$&\verb|\dim|&$\dim$&\verb|\liminf|&$\liminf$&\verb|\sin|&$\sin$\\
+\verb|\arg|&$\arg$&\verb|\exp|&$\exp$&\verb|\limsup|&$\limsup$&\verb|\sinh|&$\sinh$\\
+\verb|\cos|&$\cos$&\verb|\gcd|&$\gcd$&\verb|\ln|&$\ln$&\verb|\sup|&$\sup$\\
+\verb|\cosh|&$\cosh$&\verb|\hom|&$\hom$&\verb|\log|&$\log$&\verb|\tan|&$\tan$\\
+\verb|\cot|&$\cot$&\verb|\inf|&$\inf$&\verb|\max|&$\max$&\verb|\tanh|&$\tanh$\\
+\verb|\coth|&$\coth$&\verb|\injlim|&$\injlim$&\verb|\min|&$\min$&&\\
+\verb|\csc|&$\csc$&\verb|\ker|&$\ker$&\verb|\Pr|&$\Pr$&&\\
+\verb|\varinjlim|&$\varinjlim$&\verb|\varliminf|&$\varliminf$&&&&\\
+\verb|\varprojlim|&$\varprojlim$&\verb|\varlimsup|&$\varlimsup$&&&&
+\end{tabular}
+
+\section{$\mod$及其相关符号}
+命令\verb|\mod、\bmod、\pmod、\pod|用于处理“mod”符号的特殊间距约定。\verb|\bmod|和\verb|\pmod|可以在\LaTeX 中使用，但使用{\bfseries amsmash}包时，\verb|\pmod|用于非行间模式时，它的间距将调整为较小的值。\verb|\mod|和\verb|\pod|是某些作者首选的\verb|\pmod|变体：\verb|\mod|省略了括号，而\verb|\pod|省略“mod”并保留括号。
+\begin{tcblisting}{}
+\begin{equation}
+\gcd(n,m\bmod n);\quad x\equiv  y\pmod b;
+\quad x\equiv y\mod c;\quad x\equiv y\pod d
+\end{equation}
+\end{tcblisting}
+
+\chapter{\textbackslash text命令}
+\verb|\text|命令的主要作用是用于一些行间公式的文字。它和\LaTeX 的\verb|\mbox|命令的作用很像，但是有更多的优点。如果您希望一段文字出现在下标，可以输入\verb|..._{\textrm{word or phrase}}|，这个要比\verb|\mbox|的等价形式简单：\\
+\verb|...{\mbox{\rmfamily\scriptsize word or phrase}}|。注意到标准的\verb|\textrm|命令会使用{\bfseries amsmath}的\verb|\text|命令，但是保证\verb|\rmfamily|字体被使用。
+\begin{tcblisting}{}
+\begin{equation}
+f_{[x_{i-1},x_i]} \text{ is monotonic,}\quad i=1,\dots,c+1
+\end{equation}
+\end{tcblisting}
+
+\verb|\text|的字体会和周围的环境字体保持一致，例如在定理环境中，\verb|\text|的内容会变成斜体字体。
+
+如果在\verb|\text|命令中包含数学表达式，一定要用\verb|$...$|指明。
+\begin{tcblisting}{}
+\[\partial_sf(x)=\frac{\partial}{\partial x}f(x_0)\quad f(x)\quad
+\text{for $x=x_0+I-x$.}\]
+\end{tcblisting}
+
+函数名不应该用\verb|\text|输入，而应该用\verb|\mathrm|或\verb|\DeclareMathOperator|比较合适。这些是固定实体，不应根据外部内容进行更改（例如出现在用斜体设置的定理中），并且在声明的运算符的情况下，自动应用适当的间距。
+\chapter{积分与求和}
+\section{多行上下标}
+\verb|\substack|命令可以用于生成多行下标或上标，例如
+
+\begin{listing}
+\[
+\sum_{\substack{
+0\le i\le m\\
+0<j<n}}
+P(i,j)
+\]
+\end{listing}
+
+更一般的形式是\verb|subarray|环境可以指定每一行的左对齐而不限于居中，例如
+\begin{listing}
+\[
+\sum_{\begin{subarray}{l}
+        i\in\Lambda\\ 0<j<n
+      \end{subarray}}
+P(i,j)
+\]
+\end{listing}
+
+\section{\textbackslash sideset命令}
+\verb|\sideset|命令是为了一个特殊用途：将一个符号放在一个巨算符的上标或下标角落上，比如$\sum$或$\prod$。注意这个命令不能用于其他非求和符号类的巨算符。典型的例子是如果您想在一个求和符号上输入一撇（\verb|\prime|），如果没有`limits'选项，您可以使用\verb|\nolimits|，比如在行间模式中输入\verb|\sum\nolimits' E_n|：
+\begin{equation}
+\sum\nolimits' E_n
+\end{equation}
+
+然而，如果您想要的不仅是一撇，还想要在求和符号的上方或下方再输入一些其他的东西，这就不容易了——当然，要是没有\verb|\sideset|的话，这是非常困难的。但是利用\verb|\sideset|，您可以输入
+\begin{tcblisting}{}
+\[
+\sideset{}{'}
+  \sum_{n<k,\;\text{$n$为奇数}} nE_n
+\]
+\end{tcblisting}
+
+额外的一对空大括号可以通过这样一个事实来解释：\verb|\sideset|具有在一个较大的标识符的每个角都放置一个或多个符号的能力：要在乘积符号的每个角都放置一个星号，您可以键入：
+\begin{listing}
+  \[
+\sideset{_*^*}{_*^*}\prod
+\]
+\end{listing}
+
+\section{上下标的放置与limits选项\label{sec7.3}}
+默认的上标未知决定于主算符。求和类符号默认为displaylimits放置：当求和类符号出现在行间公式时，上标或下标出现在求和类符号的正上方或正下方，但是在行内公式中，上下标被放置在旁边，来避免周围的文本行的不美观和浪费地伸展。而对带有上下标的积分类符号则默认是放在旁边，即使是在行间公式也一样。（参看第二章中的\verb|intlimits|选项）。
+
+诸如$\sin$或$\lim$之类的算符名，可能既有displaylimits，又有limits放置模式，这取决于它们的定义。标准的算符名是根据其数学用途来定义的。
+
+\verb|\limits|和\verb|\nolimits|命令可以用来修改主算符的正常上下标位置：
+\[\sum\nolimits_X,\qquad\iint\limits_X,\qquad\varliminf\nolimits_{n\to\infty}\]
+
+要定义一个命令使得其上标与\verb|\sum|的displaylimits行为一致，在其定义的末尾加入\verb|\displaylimits|。当多种\verb|\limits，\nolimits|或\verb|\displaylimits|选项连续出现时，最后一个选项优先。
+\section{多重积分负号}
+\verb|\iint，\iiint，\iiiint|输出多重积分负号，且给出自适应的间距，在文本和行间模式都是一样。\verb|\idotsint|是这种积分号的扩展，只给出两个积分号，但在中间用点来填充。
+\begin{equation}
+\iint\limits_Af(x,y)\,\text dx\text dy\qquad\iiint\limits_Af(x,y,z)\,\text dx\text dy\text d z
+\end{equation}
+\begin{equation}
+\iiiint\limits_Af(w,x,y,z)\,\text dw\text dx\text dy\text dz\qquad\idotsint\limits_Af(x_1,\cdots,x_k)
+\end{equation}
+\chapter{交换图}
+一些交换图，比如\AmS-\TeX 中的，是可以用{\bfseries amscd}画的。对于更复杂的交换图，作者应该用更综合性的包，比如{\bfseries TikZ}（特别地，{\bfseries tikz-cd}）或者{\bfseries XY-pic}，但是对于简单的不含对角线箭头的交换图，{\bfseries amscd}包的命令应该就足够了。这里是一个例子：
+\begin{tcblisting}{}
+\[
+\begin{CD}
+S^{\mathcal{W}_\Lambda}\otimes T @>j>>  T\\
+@VVV                                    @VV{\text{End} P}V\\
+{S\otimes T}/I                  @=      (Z\otimes T)/J
+\end{CD}
+\]
+\end{tcblisting}
+
+在\verb|CD|环境中，\verb|@>>>，@<<<，@VVV|和\verb|@AAA|分别给出向右，左，下，上的箭头。对于水平箭头，在第一个与第二个\verb|>|（或\verb|<|）之间的内容将会以上标的形式输出。而第二个与第三个\verb|>|（或\verb|<|）之间的内容会以下标形式输出。类似地，在前两个或后两个\verb|A|或\verb|V|之间的内容分别以左标或右标输出。\verb|@=|和\verb|@||分别给出水平和垂直的双竖线。空箭头命令\verb|@.|可以用来在需要的地方填充一个不可见的箭头。
+\chapter{使用数学字体}
+\section{简介}
+对于\LaTeX 的更综合性的信息，参考\LaTeX 的字体说明（\verb|fntguide.tex|）或者\LaTeX 伴侣\cite{4}。在\LaTeX 的数学字体中的基本命令有\\\verb|\mathbf，\mathrm，\mathcal，\mathsf，\mathtt，\mathit|。额外的数学命令，比如\verb|\mathbb|用于黑板字体，\verb|\mathfrak|用于Fraktur，\verb|\mathscr|用于Euler手记，这些可以分别通过加载{\bfseries amsfonts}和{\bfseries euscript}得到。
+\section{推荐使用的数学字体命令}
+如果您需要在您的文档中频繁使用数学字体命令，您可能希望它们能有简写名称，比如\verb|\mb|而不是\verb|\mathbf|。当然，这并不是难事，只要您使用适当的\verb|\newcommand|命令就可以定义简写了。但是在\LaTeX 中，提供短名称实际上对作者是一种伤害，因为这会模糊一个更好的选择：定义来自底层数学对象名称的自定义命令名称，而不是来自用于区分对象的字体名称。例如，如果使用粗体表示向量。如果您定义一个\verb|vector|命令而不是一个\verb|math-bold|命令，那么从长远来看您会得到更好的服务。
+\begin{verbatim}
+\newcommand{\vect}[1]{\mathbf{#1}}
+\end{verbatim}
+您可以输入\verb|\vect{a}+\vert{b}|来得到$\mathbf a+\mathbf b$。如果您决定在接下来的几个月内因为其他目的使用粗体，而向量使用一个小箭头，您只需要修改\verb|\vect|的命令即可，否则您不得不通过文档来替换所有出现的\verb|\mathbf|，甚至需要检查每一个命令看它是否确实是一个向量的例子。
+
+用于为特定字体的不同字母分配不同的命令名也是有用的。
+\begin{verbatim}
+\DeclareSymbolFont{AMSb}{U}{msb}{m}{n}% 或者使用amsfonts包
+\DeclareMathSymbol{\C}{\mathalpha}{AMSb}{''43}
+\DeclareMathSymbol{\R}{\mathalpha}{AMSb}{''52}
+\end{verbatim}
+
+这些声明定义了命令\verb|\C|和\verb|\R|，是来自\verb|AMSb|数学符号字体的黑板字体。如果您在文档中更喜欢实数或复数，您会发现此方法比定义一个\verb|\field|命令，然后输入\verb|\field{C}，\field{R}|更方便。但是为了获得最大的灵活性和控制权，可以定义这样一个\verb|\field|命令，然后根据该命令定义\verb|\C|和\verb|\R|：
+\begin{verbatim}
+\usepackage{amsfonts}%获取\mathbb 字母表
+\newcommand{\field}[1}{\mathbb{#1}}
+\newcommand{\C}{\field{C}}
+\newcommand{\R}{\field{R}}
+\end{verbatim}
+\section{粗体数学符号}
+\verb|\mathbf|命令通常用于在数学中输出粗体拉丁字母，但是对于绝大多数其他数学符号都是无效的。或者它的效果依赖于正在使用的一组数学字体。例如，输入
+\begin{verbatim}
+\Delta \mathbf{\Delta}\mathbf{+}\delta \mathbf{\delta}
+\end{verbatim}
+将得到$\Delta \boldsymbol{\Delta}+\delta\delta$，\verb|\mathbf|对加号和小写的delta无效。因此{\bfseries amsmath}提供了两个额外的命令：\verb|\boldsymbol|和\verb|\pmb|，可以用来对其他的数学符号生效。\verb|\boldsymbol|可以用于\verb|\mathbf|不起作用的数学符号当且仅当您当前的数学字体集包括该符号的粗体版本。对于没有由您的数学字体集提供的真正粗体版本的任何数学符号，可以使用\verb|\pmb|作为最后的手段：``pmb"代表“穷人的粗体”，该命令通过用轻度平板印刷打印符号的多个副本来工作。输出的质量较差，尤其是对于包含细线笔画的符号。当标准的默认\LaTeX 数学字体集正在使用（CMR）时，可能需要\verb|\pmb|的唯一符号是大型运算符符号，\verb|\sum|、扩展定界符符号或{\bfseries amssymb}包\cite{8}提供的额外数学符号。
+
+下面的公式展示了一些可能的结果：
+\begin{tcblisting}{}
+\[
+A_\infty+ \pi A_0
+\sim \mathbf{A}_{\boldsymbol{\infty}} \boldsymbol{+}
+  \boldsymbol{\pi} \mathbf{A}_{\boldsymbol{0}}
+\sim\pmb{A}_{\pmb{\infty}} \pmb{+}\pmb{\pi} \pmb{A}_{\pmb{0}}
+\]
+\end{tcblisting}
+
+如果您只想使用\verb|\boldsymbol|命令而不加载完整的{\bfseries amsmath}包，那么推荐{\bfseries bm}包（这是一个标准的\LaTeX 包，而不是一个 \hologo{AmS} 包，如果您有1997或者更新的\LaTeX 版本，这个包已经包含在内了。）。
+\section{斜体希腊字母}
+对于斜体的大写希腊字母，提供了以下命令
+\begin{center}
+\begin{tabular}{rlrl}
+\verb|\varGamma|&$\varGamma$&\verb|\varSigma|&$\varSigma$\\
+\verb|\varDelta|&$\varDelta$&\verb|\varUpsilon|&$\varUpsilon$\\
+\verb|\varTheta|&$\varTheta$&\verb|\varPhi|&$\varPhi$\\
+\verb|\varLambda|&$\varLambda$&\verb|\varPsi|&$\varPsi$\\
+\verb|\varXi|&$\varXi$&\verb|\varOmega|&$\varOmega$\\
+\verb|\varPi|&$\varPi$&&
+\end{tabular}
+\end{center}
+
+\bibliographystyle{ieeetr}
+\bibliography{reference}
+\addcontentsline{toc}{chapter}{参考文献}
+\begin{thebibliography}{2}
+\bibitem{1} George Gr\"atzer, \emph{More Math into \LaTeX}, fifth ed., Springer, New York, 2016.
+\bibitem{2} Donald E.Knuth, \emph{The \TeX book}, Addison-Wesley, Reading, MA, 1984.
+\bibitem{3} Leslie Lamport, \emph{\LaTeX: A document preparation system}, 2nd revised ed., Addison-Wesley, Reading, MA, 1994.
+\bibitem{4} Frank MittelBach, Michel Goossens, et al., \emph{The \LaTeX companion}, second ed., Addison-Wesley, Reading, MA, 2004. This is now also available as an ebook, in both English and German; see \href{http://www.latex-project.org/help/books}.
+    {http://www.latex-project.org/help/books}. The front matter, including the full Table of Contents, can be viewed online, from a link on the same page.
+\bibitem{5} Frank Mitterlbach and Rainer Sch\"opf, \emph{The new font family selection——user interface to standard \LaTeX, TUGboat} \textbf{11}, no. 2(June 1990), pp. 297-305.
+\bibitem{6} Michael Spivak, \emph{The joy of \TeX}, 2nd revised ed., Amer. Math. Soc., Providence, RI, 1990.
+\bibitem{7} \emph{AMS author handbook}, seperate versions for journal articles, monographs and proceedings articles, Amer. Math. Soc., Providence, RI, 2017; \href{https://www.ams.org/publications/authors/tex/author-handbook}.
+    {https://www.ams.org/publications/authors/tex/author-handbook}.
+\bibitem{8}\emph{AMSFonts version} 2.2d——\emph{user's guide}, Amer. Math. Soc., Provindence, RI, 2002; distributed with the AMSFonts package \href{http://mirror.ctan.org/tex-archive/fonts/amsfonts/doc/amsfndoc.pdf}.
+    {http://mirror.ctan.org/tex-archive/fonts/amsfonts/doc/amsfndoc.pdf}.
+\bibitem{9}\emph{Using the} {\bfseries amsmath} \emph{package}, version 2.20.3, Amer. Math. Soc., Provindence, RI,2017; \href{http://mirror.ctan.org/tex-archive/macros/latex/required/amscls/doc/amsthdoc.pdf}
+    {http://mirror.ctan.org/tex-archive/macros/latex/required/amscls/doc/amsthdoc.pdf}
+\bibitem{10}Morten Hogholm, Lars Masden, \emph{The} {\bfseries mathtools} \emph{package}, 2018;
+\href{http://mirror.ctan.org/tex-archive/macros/latex/contrib/mathtools/mathtools.pdf}
+{http://mirror.ctan.org/tex-archive/macros/latex/contrib/mathtools/mathtools.pdf}.
+\bibitem{11}The \LaTeX Project, \href{https://www.latex-project.org/}
+{https://www.latex-project.org/}.
+\bibitem Online discussion group comp.text.tex, \href{https://groups.google.com/forum/\#!forum/comp.text.tex}
+    {https://groups.google.com/forum/\#!forum/comp.text.tex}.
+\bibitem{13}Online question and answer forum {\bfseries tex.stackexchange},
+\href{https://tex.stackexchange.com/}{https://tex.stackexchange.com/}.
+\end{thebibliography}
+
+\end{document}
